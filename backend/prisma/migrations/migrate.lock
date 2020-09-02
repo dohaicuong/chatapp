@@ -1,0 +1,6 @@
+# Prisma Migrate lockfile v1
+
+20200901053519-user-model
+20200901060410-user-model-avatar-nullable
+20200901061736-user-model-cuid
+20200902013131-user-participant-message-model
