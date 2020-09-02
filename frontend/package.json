@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/pickers": "^3.2.10",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -10,16 +12,25 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "@types/react-relay": "^7.0.9",
+    "@types/relay-runtime": "^10.0.3",
+    "react": "^0.0.0-experimental-94c0244ba",
+    "react-dom": "^0.0.0-experimental-94c0244ba",
+    "react-error-boundary": "^2.3.1",
+    "react-relay": "^0.0.0-experimental-183bdd28",
+    "react-relay-network-modern": "^4.7.6",
     "react-scripts": "3.4.3",
     "typescript": "~3.7.2"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test": "react-scripts test --env=jest-environment-jsdom-sixteen",
+    "test:coverage": "yarn test -- --coverage --watchAll=false",
+    "eject": "react-scripts eject",
+    "update:schema": "dotenv -e .env.local yarn schema",
+    "schema": "get-graphql-schema $REACT_APP_API_ENDPOINT > schema.graphql",
+    "relay": "relay-compiler"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -35,5 +46,15 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "babel-plugin-macros": "^2.8.0",
+    "babel-plugin-relay": "^10.0.1",
+    "dotenv-cli": "^3.2.0",
+    "get-graphql-schema": "^2.1.2",
+    "graphql": "^15.3.0",
+    "relay-compiler": "^10.0.1",
+    "relay-compiler-language-typescript": "^13.0.1",
+    "relay-config": "^10.0.1"
   }
 }

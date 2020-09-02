@@ -1,0 +1,307 @@
+"""Exposes a URL that specifies the behaviour of this scalar."""
+directive @specifiedBy(
+  """The URL that specifies the behaviour of this scalar."""
+  url: String!
+) on SCALAR
+
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
+type Conversation implements Node {
+  """Relay ID"""
+  id: ID!
+  title: String!
+  creator: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  participantConnection(
+    """Returns the first n elements from the list."""
+    first: Int
+
+    """Returns the elements in the list that come after the specified cursor"""
+    after: String
+
+    """Returns the last n elements from the list."""
+    last: Int
+
+    """Returns the elements in the list that come before the specified cursor"""
+    before: String
+  ): ParticipantConnection!
+  messageConnection(
+    """Returns the first n elements from the list."""
+    first: Int
+
+    """Returns the elements in the list that come after the specified cursor"""
+    after: String
+
+    """Returns the last n elements from the list."""
+    last: Int
+
+    """Returns the elements in the list that come before the specified cursor"""
+    before: String
+  ): MessageConnection!
+}
+
+type ConversationConnection {
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types
+  """
+  edges: [ConversationEdge]
+
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo
+  """
+  pageInfo: PageInfo!
+}
+
+type ConversationEdge {
+  """https://facebook.github.io/relay/graphql/connections.htm#sec-Cursor"""
+  cursor: String!
+
+  """https://facebook.github.io/relay/graphql/connections.htm#sec-Node"""
+  node: Conversation!
+}
+
+type ConversationSubscriptionPayload {
+  conversationId: ID!
+  message: Message!
+}
+
+input CreateConversationInput {
+  title: String!
+  participantIds: [ID!]
+}
+
+type CreateConversationPayload {
+  conversation: Conversation!
+}
+
+input CreateMessageInput {
+  conversationId: ID!
+  message: String!
+}
+
+type CreateMessagePayload {
+  conversationId: ID!
+  message: Message!
+}
+
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the
+`date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO
+8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar DateTime
+
+input InvitePeopleInput {
+  conversationId: ID!
+  participantIds: [ID!]!
+}
+
+type InvitePeoplePayload {
+  conversationId: ID!
+  conversation: Conversation!
+  participantIds: [ID!]!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type Message implements Node {
+  """Relay ID"""
+  id: ID!
+  message: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  sender: User!
+  conversation: Conversation!
+}
+
+type MessageConnection {
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types
+  """
+  edges: [MessageEdge]
+
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo
+  """
+  pageInfo: PageInfo!
+}
+
+type MessageEdge {
+  """https://facebook.github.io/relay/graphql/connections.htm#sec-Cursor"""
+  cursor: String!
+
+  """https://facebook.github.io/relay/graphql/connections.htm#sec-Node"""
+  node: Message!
+}
+
+type Mutation {
+  signup(input: SignupInput!): AuthPayload!
+  login(input: LoginInput!): AuthPayload!
+  createConversation(input: CreateConversationInput!): CreateConversationPayload!
+  invitePeople(input: InvitePeopleInput!): InvitePeoplePayload!
+  removePeople(input: RemovePeopleInput!): RemovePeoplePayload!
+  createMessage(input: CreateMessageInput!): CreateMessagePayload!
+}
+
+interface Node {
+  """Relay ID"""
+  id: ID!
+}
+
+"""
+PageInfo cursor, as defined in https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo
+"""
+type PageInfo {
+  """
+  Used to indicate whether more edges exist following the set defined by the clients arguments.
+  """
+  hasNextPage: Boolean!
+
+  """
+  Used to indicate whether more edges exist prior to the set defined by the clients arguments.
+  """
+  hasPreviousPage: Boolean!
+
+  """
+  The cursor corresponding to the first nodes in edges. Null if the connection is empty.
+  """
+  startCursor: String
+
+  """
+  The cursor corresponding to the last nodes in edges. Null if the connection is empty.
+  """
+  endCursor: String
+}
+
+type Participant implements Node {
+  """Relay ID"""
+  id: ID!
+  user: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  conversation: Conversation!
+}
+
+type ParticipantConnection {
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types
+  """
+  edges: [ParticipantEdge]
+
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo
+  """
+  pageInfo: PageInfo!
+}
+
+type ParticipantEdge {
+  """https://facebook.github.io/relay/graphql/connections.htm#sec-Cursor"""
+  cursor: String!
+
+  """https://facebook.github.io/relay/graphql/connections.htm#sec-Node"""
+  node: Participant!
+}
+
+type Query {
+  userConnection(
+    """Returns the first n elements from the list."""
+    first: Int
+
+    """Returns the elements in the list that come after the specified cursor"""
+    after: String
+
+    """Returns the last n elements from the list."""
+    last: Int
+
+    """Returns the elements in the list that come before the specified cursor"""
+    before: String
+  ): UserConnection!
+  node(id: ID!): Node!
+  nodes(ids: [ID!]!): [Node!]!
+  conversationConnection(
+    """Returns the first n elements from the list."""
+    first: Int
+
+    """Returns the elements in the list that come after the specified cursor"""
+    after: String
+
+    """Returns the last n elements from the list."""
+    last: Int
+
+    """Returns the elements in the list that come before the specified cursor"""
+    before: String
+  ): ConversationConnection!
+}
+
+input RemovePeopleInput {
+  conversationId: ID!
+  participantIds: [ID!]!
+}
+
+type RemovePeoplePayload {
+  conversationId: ID!
+  conversation: Conversation!
+  participantIds: [ID!]!
+}
+
+input SignupInput {
+  email: String!
+  password: String!
+  name: String
+  avatar: String
+}
+
+type Subscription {
+  conversation: ConversationSubscriptionPayload!
+}
+
+type User implements Node {
+  """Relay ID"""
+  id: ID!
+  email: String!
+  name: String
+  avatar: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  conversationConnection(
+    """Returns the first n elements from the list."""
+    first: Int
+
+    """Returns the elements in the list that come after the specified cursor"""
+    after: String
+
+    """Returns the last n elements from the list."""
+    last: Int
+
+    """Returns the elements in the list that come before the specified cursor"""
+    before: String
+  ): ConversationConnection!
+}
+
+type UserConnection {
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-Edge-Types
+  """
+  edges: [UserEdge]
+
+  """
+  https://facebook.github.io/relay/graphql/connections.htm#sec-undefined.PageInfo
+  """
+  pageInfo: PageInfo!
+}
+
+type UserEdge {
+  """https://facebook.github.io/relay/graphql/connections.htm#sec-Cursor"""
+  cursor: String!
+
+  """https://facebook.github.io/relay/graphql/connections.htm#sec-Node"""
+  node: User!
+}
+

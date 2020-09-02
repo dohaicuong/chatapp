@@ -1,26 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
 
-function App() {
+import { RelayEnvironmentProvider } from 'react-relay/hooks'
+import environment from 'providers/relay'
+
+import { ThemeProvider, CssBaseline } from '@material-ui/core'
+import theme from 'providers/theme'
+
+// import { MuiPickersUtilsProvider } from '@material-ui/pickers'
+// import DateFnsUtils from '@date-io/date-fns'
+
+
+import { ErrorBoundary } from 'react-error-boundary'
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <ErrorBoundary fallback={<>App level error</>}>
+      <RelayEnvironmentProvider environment={environment}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          App
+        </ThemeProvider>
+      </RelayEnvironmentProvider>
+    </ErrorBoundary>
+  )
 }
 
-export default App;
+export default App
