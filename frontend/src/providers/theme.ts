@@ -16,6 +16,12 @@ export default createMuiTheme({
           background: '#9c9c9c',
         },
       }
+    },
+    MuiButton: {
+      label: {
+        textTransform: 'none',
+        // fontWeight: 600,
+      }
     }
   }
 })
