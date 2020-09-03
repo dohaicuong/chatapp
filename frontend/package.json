@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@date-io/date-fns": "1.x",
     "@material-ui/core": "^4.11.0",
     "@material-ui/pickers": "^3.2.10",
     "@testing-library/jest-dom": "^4.2.4",
@@ -14,12 +15,17 @@
     "@types/react-dom": "^16.9.0",
     "@types/react-relay": "^7.0.9",
     "@types/relay-runtime": "^10.0.3",
+    "date-fns": "^2.16.1",
+    "history": "^5.0.0",
+    "notistack": "^1.0.0",
     "react": "^0.0.0-experimental-94c0244ba",
     "react-dom": "^0.0.0-experimental-94c0244ba",
     "react-error-boundary": "^2.3.1",
     "react-relay": "^0.0.0-experimental-183bdd28",
     "react-relay-network-modern": "^4.7.6",
+    "react-router-dom": "^0.0.0-experimental-ffd8c7d0",
     "react-scripts": "3.4.3",
+    "subscriptions-transport-ws": "^0.9.18",
     "typescript": "~3.7.2"
   },
   "scripts": {

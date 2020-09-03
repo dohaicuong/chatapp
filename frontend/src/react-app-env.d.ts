@@ -5,3 +5,5 @@
 declare module 'babel-plugin-relay/macro' {
   export { graphql } from 'react-relay';
 }
+
+type ArgumentTypes<F extends Function> = F extends (...args: infer A) => any ? A : never;
