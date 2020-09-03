@@ -19,6 +19,16 @@ const network = new RelayNetworkLayer(
     authMiddleware({
       token: () => localStorage.getItem('ACCESS_TOKEN') ?? '',
     }),
+    (next) => async (req) => {
+      const res = await next(req)
+      // TODO find a way to get [name] for placeholder
+      // @ts-ignore temporary fix for using @nexus/schema
+      if(res.errors) res.data = {
+        placeholder: null
+      }
+
+      return res
+    },
   ],
   {
     noThrow: true,

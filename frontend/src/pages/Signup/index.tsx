@@ -13,16 +13,16 @@ import { useSnackbar } from 'notistack'
 import { useNavigate } from 'react-router-dom'
 import { useMutation } from 'react-relay/hooks'
 import { graphql } from 'babel-plugin-relay/macro'
-import { LoginMutation, LoginInput } from './__generated__/LoginMutation.graphql'
+import { SignupMutation, SignupInput } from './__generated__/SignupMutation.graphql'
 
-const Login: React.FC = () => {
+const Signup: React.FC = () => {
   const classes = useStyles()
 
   const { enqueueSnackbar } = useSnackbar()
   const navigate = useNavigate()
-  const [loginMutation] = useMutation<LoginMutation>(graphql`
-    mutation LoginMutation($input: LoginInput!) {
-      login(input: $input) {
+  const [signupMutation] = useMutation<SignupMutation>(graphql`
+    mutation SignupMutation($input: SignupInput!) {
+      signup(input: $input) {
         token
         user {
           name
@@ -31,17 +31,17 @@ const Login: React.FC = () => {
     }
   `)
 
-  const { register, handleSubmit, errors } = useForm<LoginInput>()
-  const onSubmit = (data: LoginInput) => {
-    loginMutation({
+  const { register, handleSubmit, errors } = useForm<SignupInput>()
+  const onSubmit = (data: SignupInput) => {
+    signupMutation({
       variables: {
         input: data
       },
       onCompleted: (res, errors) => {
-        if (errors) return errors.forEach((error: any) => enqueueSnackbar(error.message, { variant: 'error' }))
-        if (!res.login) enqueueSnackbar('Internal Error, try again!', { variant: 'error' })
+        if (errors) return errors.forEach(error => enqueueSnackbar(error.message, { variant: 'error' }))
+        if (!res.signup) enqueueSnackbar('Internal Error, try again!', { variant: 'error' })
 
-        const { token, user } = res.login
+        const { token, user } = res.signup
         localStorage.setItem('ACCESS_TOKEN', token)
         enqueueSnackbar(`Welcome, ${user.name}`)
 
@@ -50,23 +50,36 @@ const Login: React.FC = () => {
     })
   }
 
-  const handleCreateAccount = () => navigate('/signup')
+  const handleSignin = () => navigate('/login')
 
   return (
     <Container maxWidth='sm' className={classes.container}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Paper className={classes.paper}>
           <Typography variant='h4' gutterBottom style={{ textAlign: 'center' }}>
-            Sign in
+            Sign up
           </Typography>
           <Typography variant='subtitle1' gutterBottom style={{ textAlign: 'center' }}>
-            Countinue to Chat App
+            Your Chat App account
           </Typography>
-          <LoginTextField
+          <SignupTextField
+            label='Name'
+            name='name'
+            className={classes.textField}
+            inputRef={register}
+            formError={errors.email?.message}
+          />
+          <SignupTextField
+            label='Avatar'
+            name='avatar'
+            className={classes.textField}
+            inputRef={register}
+            formError={errors.email?.message}
+          />
+          <SignupTextField
             label='Email'
             name='email'
             className={classes.textField}
-            // type='email'
             required
             inputRef={register({
               pattern: {
@@ -76,18 +89,18 @@ const Login: React.FC = () => {
             })}
             formError={errors.email?.message}
           />
-          <LoginTextField
+          <SignupTextField
             label='Password'
             name='password'
-            className={classes.textField}
             type='password'
+            className={classes.textField}
             required
             inputRef={register}
-            formError={errors.password?.message}
+            formError={errors.email?.message}
           />
           <div className={classes.actionArea}>
-            <Button color='primary' onClick={handleCreateAccount}>
-              Create account
+            <Button color='primary' onClick={handleSignin}>
+              Login instead?
             </Button>
             <div style={{ flexGrow: 1 }} />
             <Button
@@ -96,7 +109,7 @@ const Login: React.FC = () => {
               className={classes.loginButton}
               type='submit'
             >
-              Login
+              Signup
             </Button>
           </div>
         </Paper>
@@ -104,7 +117,7 @@ const Login: React.FC = () => {
     </Container>
   )
 }
-export default Login
+export default Signup
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -132,10 +145,10 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-type LoginTextField = TextFieldProps & {
+type SignupTextField = TextFieldProps & {
   formError?: string | null
 }
-const LoginTextField: React.FC<LoginTextField> = ({
+const SignupTextField: React.FC<SignupTextField> = ({
   variant = 'outlined',
   fullWidth = true,
   formError,
