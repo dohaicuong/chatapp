@@ -76,6 +76,9 @@ export const SignupMutation = extendType({
         input: arg({ type: 'SignupInput', required: true })
       },
       resolve: async (_root, { input: { password, ...input }}, ctx) => {
+        const isEmailExisted = await ctx.prisma.user.findOne({ where: { email: input.email }})
+        if (isEmailExisted) throw new Error('Email is existed')
+
         const hashedPassword = await hash(password, 10)
         const user = await ctx.prisma.user.create({
           data: {
@@ -109,12 +112,13 @@ export const LoginMutation = extendType({
       args: {
         input: arg({ type: 'LoginInput', required: true })
       },
+      // @ts-ignore
       resolve: async (_root, { input: { email, password }}, ctx) => {
         const user = await ctx.prisma.user.findOne({ where: { email }})
         if (!user) throw new Error(`No user found for email: ${email}`)
 
         const isPasswordValid = await compare(password, user.password)
-        if(!isPasswordValid) throw new Error('Invalid password')
+        if(!isPasswordValid) return new Error('Invalid password')
 
         const token = sign({ userId: user.id }, APP_SECRET)
         return {
